@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:Polygons="clr-namespace:Polygons"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Polygons.MainWindow"
+        Title="Polygons"
+		PointerPressed="Win_PointerPressed"
+        PointerMoved="Win_PointerMoved"
+        PointerReleased="Win_PointerReleased">
+	<DockPanel>
+		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+			<Menu>
+				<MenuItem Header="Shape">
+					<ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
+				</MenuItem>
+			</Menu>
+			<Menu>
+				<MenuItem Header="Algorithm">
+					<ListBox x:Name="Alg" SelectionChanged="Alg_OnSelectionChanged"></ListBox>
+				</MenuItem>
+			</Menu>
+			<Button Content="Show Performance Chart" Click="OnChartClicked" DockPanel.Dock="Top"/>
+		</StackPanel>
+		<Polygons:CustomControl Name="cc"/>
+	</DockPanel>
+</Window>
