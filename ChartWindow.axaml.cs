@@ -24,7 +24,7 @@ public partial class ChartWindow : Window
 
     private void MyChartControl_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        ChartControl chartControl = this.Find<ChartControl>("chart");
+        var chartControl = this.Find<ChartControl>("chart");
         chartControl.DrawPerformance();
     }
 

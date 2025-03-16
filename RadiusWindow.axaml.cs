@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 
 
@@ -22,5 +23,18 @@ public partial class RadiusWindow : Window
         InitializeComponent();
     }
 
+    public event RadiusDelegate RadiusChanged;
+    
+    private void Slider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (this.RadiusChanged != null)
+        {
+            this.RadiusChanged(this, new RadEventArgs(Slider.Value));
+        }
+    }
 
+    public void SetRadius(double radius)
+    {
+        Slider.Value = radius;
+    }
 }

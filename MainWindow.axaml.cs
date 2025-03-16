@@ -15,6 +15,8 @@ namespace Polygons
 {
     public partial class MainWindow : Window
     {
+        private RadiusWindow? radWindow;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -22,16 +24,13 @@ namespace Polygons
             Shapes.ItemsSource = new[] { "Circle", "Triangle", "Square" };
             Shapes.SelectedIndex = 0;
 
-            Alg.ItemsSource = new[] { "By definition", "Andrew", "Show Comparison" };
+            Alg.ItemsSource = new[] { "By definition", "Andrew" };
             Alg.SelectedIndex = 0;
-
-            var window = new RadiusWindow();
-            window.Show();
         }
 
         public void Win_PointerPressed(object sender, PointerPressedEventArgs e)
         {
-            CustomControl custom = this.Find<CustomControl>("cc");
+            var custom = this.Find<CustomControl>("cc");
 
             if (e.GetCurrentPoint(custom).Properties.IsLeftButtonPressed)
             {
@@ -45,29 +44,29 @@ namespace Polygons
 
         public void Win_PointerMoved (object sender, PointerEventArgs e)
         {
-            CustomControl custom = this.Find<CustomControl>("cc");
+            var custom = this.Find<CustomControl>("cc");
             custom.Moved(e.GetPosition(custom).X, e.GetPosition(custom).Y);
         }
 
         public void Win_PointerReleased(object sender, PointerReleasedEventArgs e) 
         {
-            CustomControl custom = this.Find<CustomControl>("cc");
+            var custom = this.Find<CustomControl>("cc");
             custom.Released(e.GetPosition(custom).X, e.GetPosition(custom).Y);
         }
 
         private void Shapes_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            CustomControl? customControl = this.Find<CustomControl>("cc");
+            var customControl = this.Find<CustomControl>("cc");
 
-            int type = Shapes.SelectedIndex;
+            var type = Shapes.SelectedIndex;
             customControl?.ChangeShape(type);
         }
 
         private void Alg_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            CustomControl? customControl = this.Find<CustomControl>("cc");
+            var customControl = this.Find<CustomControl>("cc");
 
-            int type = Alg.SelectedIndex;
+            var type = Alg.SelectedIndex;
             customControl?.ChangeAlg(type);
         }
 
@@ -75,6 +74,25 @@ namespace Polygons
         {
             var window = new ChartWindow();
             window.Show();
+        }
+
+        private void OnRadiusChanged(object? sender, RoutedEventArgs e)
+        {
+            var customControl = this.Find<CustomControl>("cc");
+            
+            if (radWindow == null)
+            {
+                radWindow = new RadiusWindow();
+                radWindow.SetRadius(Shape.R);
+                radWindow.RadiusChanged += customControl!.UpdateRadius;
+
+                radWindow.Closed += (s, args) => radWindow = null;
+                radWindow.Show();
+            }
+            else
+            {
+                radWindow.Activate();
+            }
         }
     }
 }

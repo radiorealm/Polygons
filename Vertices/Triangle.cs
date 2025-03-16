@@ -31,10 +31,10 @@ namespace Polygons.Vertices
                 return Math.Abs((p1.X * (p2.Y - p3.Y) + p2.X * (p3.Y - p1.Y) + p3.X * (p1.Y - p2.Y)) / 2.0);
             }
 
-            double areaABC = Area(A, B, C);
-            double areaPAB = Area(new Point(x, y), A, B);
-            double areaPBC = Area(new Point(x, y), B, C);
-            double areaPCA = Area(new Point(x, y), C, A);
+            var areaABC = Area(A, B, C);
+            var areaPAB = Area(new Point(x, y), A, B);
+            var areaPBC = Area(new Point(x, y), B, C);
+            var areaPCA = Area(new Point(x, y), C, A);
 
             return Math.Abs(areaABC - (areaPAB + areaPBC + areaPCA)) < 0.01;
         }

@@ -24,6 +24,10 @@ namespace Polygons
 
         private bool IsHolding;
 
+        private bool IsRChanged;
+        
+        public bool RChanged{ set { IsRChanged = value; } }
+
         public override void Render(DrawingContext drawingContext)
         {
             if (shapes.Count >= 3)
@@ -90,7 +94,7 @@ namespace Polygons
 
         public void RightPressed(double x, double y)
         {
-            Shape remove = shapes.LastOrDefault(shape => shape.IsUnderCursor(x, y));
+            var remove = shapes.LastOrDefault(shape => shape.IsUnderCursor(x, y));
 
             if (remove != null)
             {
@@ -142,18 +146,18 @@ namespace Polygons
             }
 
             //перебираем все пары
-            for (int i = 0; i < shapes.Count; i++)
+            for (var i = 0; i < shapes.Count; i++)
             {
-                for (int j = i + 1; j < shapes.Count; j++)
+                for (var j = i + 1; j < shapes.Count; j++)
                 {
-                    bool upper = false; bool lower = false;
+                    var upper = false; var lower = false;
 
                     //y1 = kx1 + b and y2 = kx2 + b. k = (y1 - y2) / (x1 - x2). b = y1 - kx1.
-                    double k = (double)(shapes[i].Y - shapes[j].Y) / (double)(shapes[i].X - shapes[j].X);
-                    double b = shapes[i].Y - k * shapes[i].X;
+                    var k = (double)(shapes[i].Y - shapes[j].Y) / (double)(shapes[i].X - shapes[j].X);
+                    var b = shapes[i].Y - k * shapes[i].X;
 
                     //для каждой пары [i; j] проверить по одну ли сторону лежат все остальные вершины
-                    for (int p = 0; p <= shapes.Count - 1; p++)
+                    for (var p = 0; p <= shapes.Count - 1; p++)
                     {
                         if (p == j || p == i) continue;
 
@@ -194,7 +198,7 @@ namespace Polygons
             // Сортируем по X, затем по Y
             shapes = shapes.OrderBy(s => s.X).ThenBy(s => s.Y).ToList();
 
-            List<Shape> lowerHull = new();
+            List<Shape> lowerHull = [];
             foreach (var shape in shapes)
             {
                 while (lowerHull.Count >= 2 && Orientation(lowerHull[lowerHull.Count - 2], lowerHull[lowerHull.Count - 1], shape) < 0)
@@ -204,8 +208,8 @@ namespace Polygons
                 lowerHull.Add(shape);
             }
 
-            List<Shape> upperHull = new();
-            for (int i = shapes.Count - 1; i >= 0; i--)
+            List<Shape> upperHull = [];
+            for (var i = shapes.Count - 1; i >= 0; i--)
             {
                 while (upperHull.Count >= 2 && Orientation(upperHull[upperHull.Count - 2], upperHull[upperHull.Count - 1], shapes[i]) < 0)
                 {
@@ -225,7 +229,7 @@ namespace Polygons
             Brush lineBrush = new SolidColorBrush(Colors.Black);
             Pen pen = new(lineBrush, 2, lineCap: PenLineCap.Square);
 
-            for (int i = 0; i < convexHull.Count - 1; i++)
+            for (var i = 0; i < convexHull.Count - 1; i++)
             {
                 drawingContext.DrawLine(pen, new Point(convexHull[i].X, convexHull[i].Y), new Point(convexHull[i + 1].X, convexHull[i + 1].Y));
             }
@@ -237,14 +241,14 @@ namespace Polygons
         {
             if (shapes.Count >= 3)
             {
-                for (int i = 0; i < shapes.Count - 1; i++)
+                for (var i = 0; i < shapes.Count - 1; i++)
                 {
-                    bool upper = false; bool lower = false;
+                    var upper = false; var lower = false;
 
-                    double k = (double)(y - shapes[i].Y) / (double)(x - shapes[i].X);
-                    double b = shapes[i].Y - shapes[i].X * k;
+                    var k = (double)(y - shapes[i].Y) / (double)(x - shapes[i].X);
+                    var b = shapes[i].Y - shapes[i].X * k;
 
-                    for (int l = 0; l < shapes.Count; l++)
+                    for (var l = 0; l < shapes.Count; l++)
                     {
                         if ((l != i))
                         {
@@ -294,6 +298,10 @@ namespace Polygons
 
         //-----------------------------------------------
 
-
+        public void UpdateRadius(object sender, RadEventArgs e)
+        {
+            Shape.R = e.r;
+            InvalidateVisual();
+        }
     }
 }

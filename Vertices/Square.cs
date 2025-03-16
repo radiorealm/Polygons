@@ -10,7 +10,7 @@ namespace Polygons.Vertices
 {
     class Square : Shape
     {
-        double side = Math.Sqrt(2) * r;
+        private double side => Math.Sqrt(2) * r;
         public bool IsInside { get; set; } = false;
 
         public Square(double x, double y) : base(x, y) { }

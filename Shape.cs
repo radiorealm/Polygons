@@ -8,23 +8,17 @@ using System.Threading.Tasks;
 
 namespace Polygons
 {
-    internal abstract class Shape
+    internal abstract class Shape(double xx, double yy)
     {
-        protected double x, y;
+        protected double x = xx, y = yy;
         protected static Color c = Colors.LavenderBlush; //TODO: ColorPicker Avalonia!!!
-        protected static int r;
+        protected static double r;
 
         protected static Brush brush;
         protected static Pen pen;
 
         public bool IsHeld; //держим?
         public bool IsInside; //внутри оболочки? убираются все вершины, у которых IsInside = true => нет смысла хранить отдельный масссив
-
-        public Shape(double xx, double yy)
-        {
-            x = xx;
-            y = yy;
-        }
 
         static Shape()
         {
@@ -45,11 +39,13 @@ namespace Polygons
             set { y = value; }
         }
 
-        Color C
+        public Color C
         {
             get { return c; }
             set { c = value; }
         }
+        
+        public static double R { get { return r; } set { r = value; } }
 
         public virtual void Draw(DrawingContext drawingContext) { }
 

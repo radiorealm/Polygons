@@ -16,34 +16,33 @@ namespace Polygons;
 
 public class ChartControl : UserControl
 {
-    private List<Shape> shapes = new List<Shape>();
-    private List<Point> points_def = new List<Point>();
-    private List<Point> points_and = new List<Point>();
+    private List<Shape> shapes = [];
+    private List<Point> points_def = [];
+    private List<Point> points_and = [];
 
     public override void Render(DrawingContext drawingContext)
     {
         if (points_def.Count > 1 && points_and.Count > 1)
         {
-            //double maxTime = points_def.Max(p => p.X);
-            //double maxShapes = points_def.Max(p => p.Y);
+            var maxShapes = points_def.Max(p => p.X);
+            var maxTime = points_def.Max(p => p.Y);
 
-            double maxTime = points_and.Max(p => p.X);
-            double maxShapes = points_and.Max(p => p.Y);
+            var width = Bounds.Width - 100;
+            var height = Bounds.Height - 100;
 
-            //определяем отношения
-            double width = Bounds.Width - 100;
-            double height = Bounds.Height - 100;
-
-            double xScale = width / maxTime;
-            double yScale = height / maxShapes;
-
-            var transformedPointsDef = points_def.Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50)).ToList();
-            var transformedPointsAnd = points_and.Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50)).ToList();
-
-            //оси
-            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, 50), new Point(50, 650)); // Ось Y
-            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, 650), new Point(width + 50, 650)); // Ось X
-
+            var xScale = width / maxShapes;
+            var yScale = height / maxTime;
+            
+            var transformedPointsDef = points_def
+                .Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50))
+                .ToList();
+            var transformedPointsAnd = points_and
+                .Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50))
+                .ToList();
+            
+            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, 50), new Point(50, height + 50));
+            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, height + 50), new Point(width + 50, height + 50));
+            
             drawingContext.DrawGeometry(new SolidColorBrush(Colors.HotPink), new Pen(Brushes.HotPink, 2), new PolylineGeometry(transformedPointsDef, false));
             drawingContext.DrawGeometry(new SolidColorBrush(Colors.CornflowerBlue), new Pen(Brushes.CornflowerBlue, 2), new PolylineGeometry(transformedPointsAnd, false));
         }
@@ -51,12 +50,14 @@ public class ChartControl : UserControl
 
     public void DrawPerformance()
     {
-        for (int i = 100; i < 1500; i = i + 100)
+        for (var i = 1; i <= 100; i++)
         {
             shapes = GenerateRandomShapes(i);
-            points_def.Add(new Point(i, MeasureDefTime(UpdateConvexHull)));
-            //points_def.Add(new Point(0, 0));
-            points_and.Add(new Point(i, MeasureDefTime(UpdateAndrew)));
+            var defTime = MeasureDefTime(UpdateConvexHull);
+            var andTime = MeasureDefTime(UpdateAndrew);
+
+            points_def.Add(new Point(defTime, i));
+            points_and.Add(new Point(andTime, i));
         }
 
         InvalidateVisual();
@@ -66,11 +67,11 @@ public class ChartControl : UserControl
     {
         var rand = new Random();
         var shapes = new List<Shape>();
-        for (int i = 0; i < count; i++) shapes.Add(new Circle(rand.Next(-1000, 1000), rand.Next(-1000, 1000)));
+        for (var i = 0; i < count; i++) shapes.Add(new Circle(rand.Next(-1000, 1000), rand.Next(-1000, 1000)));
         return shapes;
     }
 
-    public double MeasureDefTime(Action action)
+    private double MeasureDefTime(Action action)
     {
         var stopwatch = Stopwatch.StartNew();
         action();
@@ -89,18 +90,18 @@ public class ChartControl : UserControl
         }
 
         //перебираем все пары
-        for (int i = 0; i < shapes.Count; i++)
+        for (var i = 0; i < shapes.Count; i++)
         {
-            for (int j = i + 1; j < shapes.Count; j++)
+            for (var j = i + 1; j < shapes.Count; j++)
             {
-                bool upper = false; bool lower = false;
+                var upper = false; var lower = false;
 
                 //y1 = kx1 + b and y2 = kx2 + b. k = (y1 - y2) / (x1 - x2). b = y1 - kx1.
-                double k = (double)(shapes[i].Y - shapes[j].Y) / (double)(shapes[i].X - shapes[j].X);
-                double b = shapes[i].Y - k * shapes[i].X;
+                var k = (double)(shapes[i].Y - shapes[j].Y) / (double)(shapes[i].X - shapes[j].X);
+                var b = shapes[i].Y - k * shapes[i].X;
 
                 //для каждой пары [i; j] проверить по одну ли сторону лежат все остальные вершины
-                for (int p = 0; p <= shapes.Count - 1; p++)
+                for (var p = 0; p <= shapes.Count - 1; p++)
                 {
                     if (p == j || p == i) continue;
 
@@ -116,7 +117,7 @@ public class ChartControl : UserControl
                     }
                 }
 
-                if (!(lower == upper == true))
+                if (lower == upper != true)
                 {
                     shapes[i].IsInside = false;
                     shapes[j].IsInside = false;
@@ -136,20 +137,20 @@ public class ChartControl : UserControl
 
         shapes = shapes.OrderBy(s => s.X).ThenBy(s => s.Y).ToList();
 
-        List<Shape> lowerHull = new();
+        List<Shape> lowerHull = [];
         foreach (var shape in shapes)
         {
-            while (lowerHull.Count >= 2 && Orientation(lowerHull[lowerHull.Count - 2], lowerHull[lowerHull.Count - 1], shape) < 0)
+            while (lowerHull.Count >= 2 && Orientation(lowerHull[^2], lowerHull[^1], shape) < 0)
             {
                 lowerHull.RemoveAt(lowerHull.Count - 1);
             }
             lowerHull.Add(shape);
         }
 
-        List<Shape> upperHull = new();
-        for (int i = shapes.Count - 1; i >= 0; i--)
+        List<Shape> upperHull = [];
+        for (var i = shapes.Count - 1; i >= 0; i--)
         {
-            while (upperHull.Count >= 2 && Orientation(upperHull[upperHull.Count - 2], upperHull[upperHull.Count - 1], shapes[i]) < 0)
+            while (upperHull.Count >= 2 && Orientation(upperHull[^2], upperHull[^1], shapes[i]) < 0)
             {
                 upperHull.RemoveAt(upperHull.Count - 1);
             }
