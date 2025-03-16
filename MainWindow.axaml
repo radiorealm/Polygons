@@ -22,8 +22,7 @@
 					<Button Content="Show Performance Chart" Click="OnChartClicked" DockPanel.Dock="Top"/>
 				</MenuItem>
 			</Menu>
-			<Button Content="Radius" Click="OnRadiusChanged"/>
-			<Button Content="Color" Click="OnColorChanged"/>
+			<Button Content="Customize" Click="OnCustomization"/>
 		</StackPanel>
 		<Polygons:CustomControl Name="cc"/>
 	</DockPanel>

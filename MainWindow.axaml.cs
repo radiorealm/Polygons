@@ -15,8 +15,7 @@ namespace Polygons
 {
     public partial class MainWindow : Window
     {
-        private RadiusWindow? radWindow;
-        private ColorWindow? colWindow;
+        private CustomWindow? radWindow;
         
         public MainWindow()
         {
@@ -26,7 +25,7 @@ namespace Polygons
             Shapes.SelectedIndex = 0;
 
             Alg.ItemsSource = new[] { "By definition", "Andrew" };
-            Alg.SelectedIndex = 0;
+            Alg.SelectedIndex = 1;
         }
 
         public void Win_PointerPressed(object sender, PointerPressedEventArgs e)
@@ -77,15 +76,18 @@ namespace Polygons
             window.Show();
         }
 
-        private void OnRadiusChanged(object? sender, RoutedEventArgs e)
+        private void OnCustomization(object? sender, RoutedEventArgs e)
         {
             var customControl = this.Find<CustomControl>("cc");
             
             if (radWindow == null)
             {
-                radWindow = new RadiusWindow();
+                radWindow = new CustomWindow();
                 radWindow.SetRadius(Shape.R);
                 radWindow.RadiusChanged += customControl!.UpdateRadius;
+                
+                radWindow.SetColor(Shape.Brush_C, Shape.Pen_C);
+                radWindow.ColorChanged += customControl!.UpdateColor;
 
                 radWindow.Closed += (s, args) => radWindow = null;
                 radWindow.Show();
@@ -93,25 +95,6 @@ namespace Polygons
             else
             {
                 radWindow.Activate();
-            }
-        }
-        
-        private void OnColorChanged(object? sender, RoutedEventArgs e)
-        {
-            var customControl = this.Find<CustomControl>("cc");
-            
-            if (colWindow == null)
-            {
-                colWindow = new ColorWindow();
-                colWindow.SetColor(Shape.C);
-                colWindow.ColorChanged += customControl!.UpdateColor;
-
-                colWindow.Closed += (s, args) => colWindow = null;
-                colWindow.Show();
-            }
-            else
-            {
-                colWindow.Activate();
             }
         }
     }

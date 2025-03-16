@@ -16,9 +16,9 @@ using Avalonia.Interactivity;
 
 namespace Polygons;
 
-public partial class RadiusWindow : Window
+public partial class CustomWindow : Window
 {
-    public RadiusWindow()
+    public CustomWindow()
     {
         InitializeComponent();
     }
@@ -36,5 +36,23 @@ public partial class RadiusWindow : Window
     public void SetRadius(double radius)
     {
         Slider.Value = radius;
+    }
+    
+    //-----------------------------------
+    
+    private void ColorView_OnColorChanged(object? sender, ColorChangedEventArgs e)
+    {
+        if (this.ColorChanged != null)
+        {
+            this.ColorChanged(sender, new ColEventArgs(BrushColorPicker.Color, PenColorPicker.Color));
+        }
+    }
+
+    public event ColorDelegate ColorChanged;
+
+    public void SetColor(Color brush_color, Color pen_color)
+    {
+        BrushColorPicker.Color = brush_color;
+        PenColorPicker.Color = pen_color;
     }
 }

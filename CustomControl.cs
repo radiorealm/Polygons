@@ -226,7 +226,7 @@ namespace Polygons
                 shape.IsInside = false;
             }
 
-            Brush lineBrush = new SolidColorBrush(Colors.Black);
+            Brush lineBrush = new SolidColorBrush(Colors.Goldenrod);
             Pen pen = new(lineBrush, 2, lineCap: PenLineCap.Square);
 
             for (var i = 0; i < convexHull.Count - 1; i++)
@@ -306,7 +306,8 @@ namespace Polygons
         
         public void UpdateColor(object sender, ColEventArgs e)
         {
-            Shape.C = e.c;
+            Shape.Brush_C = e.brush_c;
+            Shape.Pen_C = e.pen_c;
             InvalidateVisual();
         }
     }

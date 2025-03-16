@@ -11,7 +11,8 @@ namespace Polygons
     internal abstract class Shape(double xx, double yy)
     {
         protected double x = xx, y = yy;
-        protected static Color c = Colors.LavenderBlush; //TODO: ColorPicker Avalonia!!!
+        protected static Color brush_c;
+        protected static Color pen_c;
         protected static double r;
 
         protected static Brush brush;
@@ -23,7 +24,8 @@ namespace Polygons
         static Shape()
         {
             r = 20;
-            pen = new Pen(Brushes.White, 2, lineCap: PenLineCap.Square);
+            brush = new SolidColorBrush(Colors.LavenderBlush);
+            pen = new Pen(new SolidColorBrush(Colors.FloralWhite), 2);
         }
 
         public double X
@@ -38,7 +40,9 @@ namespace Polygons
             set { y = value; }
         }
 
-        public static Color C { get { return c; } set { c = value; } }
+        public static Color Brush_C { get { return brush_c; } set { brush_c = value; brush = new SolidColorBrush(brush_c); } }
+        
+        public static Color Pen_C { get { return pen_c; } set { pen_c = value; pen = new Pen(new SolidColorBrush(pen_c), 2); } }
         
         public static double R { get { return r; } set { r = value; } }
 

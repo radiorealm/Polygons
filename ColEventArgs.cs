@@ -4,7 +4,8 @@ namespace Polygons;
 
 public delegate void ColorDelegate(object sender, ColEventArgs args);
 
-public class ColEventArgs(Color color) : EventArgs
+public class ColEventArgs(Color brush_color, Color pen_color) : EventArgs
 {
-    public Color c = color;
+    public Color brush_c = brush_color;
+    public Color pen_c = pen_color;
 }

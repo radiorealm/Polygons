@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SizeToContent="WidthAndHeight"
+        x:Class="Polygons.CustomWindow"
+        Title="CustomWindow">
+        <StackPanel>
+                <TextBlock Text="Select radius:"/>
+                <Slider x:Name="Slider" Minimum="10" Maximum="60" ValueChanged="Slider_OnValueChanged"></Slider>
+                <DockPanel>
+                        <ItemsControl>
+                                <TextBlock Text="Select brush color:"/>
+                                <ColorPicker x:Name="BrushColorPicker" ColorChanged="ColorView_OnColorChanged"></ColorPicker>
+                        </ItemsControl>
+                        <ItemsControl>
+                                <TextBlock Text="Select pen color:"/>
+                                <ColorPicker x:Name="PenColorPicker" ColorChanged="ColorView_OnColorChanged"></ColorPicker>
+                        </ItemsControl>
+                </DockPanel>
+        </StackPanel>        
+</Window>
