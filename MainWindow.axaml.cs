@@ -16,6 +16,7 @@ namespace Polygons
     public partial class MainWindow : Window
     {
         private RadiusWindow? radWindow;
+        private ColorWindow? colWindow;
         
         public MainWindow()
         {
@@ -92,6 +93,25 @@ namespace Polygons
             else
             {
                 radWindow.Activate();
+            }
+        }
+        
+        private void OnColorChanged(object? sender, RoutedEventArgs e)
+        {
+            var customControl = this.Find<CustomControl>("cc");
+            
+            if (colWindow == null)
+            {
+                colWindow = new ColorWindow();
+                colWindow.SetColor(Shape.C);
+                colWindow.ColorChanged += customControl!.UpdateColor;
+
+                colWindow.Closed += (s, args) => colWindow = null;
+                colWindow.Show();
+            }
+            else
+            {
+                colWindow.Activate();
             }
         }
     }

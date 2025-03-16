@@ -21,7 +21,7 @@ namespace Polygons.Vertices
 
         public override void Draw(DrawingContext drawingContext)
         {
-            drawingContext.DrawGeometry(brush, pen, new PolylineGeometry([A, B, C, A], true));
+            drawingContext.DrawGeometry(new SolidColorBrush(c), pen, new PolylineGeometry([A, B, C, A], true));
         }
 
         public override bool IsUnderCursor(double x, double y)

@@ -17,7 +17,7 @@ namespace Polygons.Vertices
 
         public override void Draw(DrawingContext drawingContext)
         {
-            drawingContext.DrawRectangle(brush, pen, new Rect(x - side / 2, y - side / 2, side, side));
+            drawingContext.DrawRectangle(new SolidColorBrush(c), pen, new Rect(x - side / 2, y - side / 2, side, side));
         }
 
         public override bool IsUnderCursor(double x, double y)

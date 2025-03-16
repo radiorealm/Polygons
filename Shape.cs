@@ -23,8 +23,7 @@ namespace Polygons
         static Shape()
         {
             r = 20;
-            brush = new SolidColorBrush(c);
-            pen = new Pen(Brushes.PaleVioletRed, 2, lineCap: PenLineCap.Square);
+            pen = new Pen(Brushes.White, 2, lineCap: PenLineCap.Square);
         }
 
         public double X
@@ -39,11 +38,7 @@ namespace Polygons
             set { y = value; }
         }
 
-        public Color C
-        {
-            get { return c; }
-            set { c = value; }
-        }
+        public static Color C { get { return c; } set { c = value; } }
         
         public static double R { get { return r; } set { r = value; } }
 

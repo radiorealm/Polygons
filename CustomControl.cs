@@ -303,5 +303,11 @@ namespace Polygons
             Shape.R = e.r;
             InvalidateVisual();
         }
+        
+        public void UpdateColor(object sender, ColEventArgs e)
+        {
+            Shape.C = e.c;
+            InvalidateVisual();
+        }
     }
 }

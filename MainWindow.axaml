@@ -23,6 +23,7 @@
 				</MenuItem>
 			</Menu>
 			<Button Content="Radius" Click="OnRadiusChanged"/>
+			<Button Content="Color" Click="OnColorChanged"/>
 		</StackPanel>
 		<Polygons:CustomControl Name="cc"/>
 	</DockPanel>
