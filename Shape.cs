@@ -24,8 +24,10 @@ namespace Polygons
         static Shape()
         {
             r = 20;
-            brush = new SolidColorBrush(Colors.LavenderBlush);
-            pen = new Pen(new SolidColorBrush(Colors.FloralWhite), 2);
+            pen_c = Colors.LavenderBlush;
+            brush_c = Colors.CornflowerBlue;
+            brush = new SolidColorBrush(brush_c);
+            pen = new Pen(new SolidColorBrush(pen_c), 2);
         }
 
         public double X
