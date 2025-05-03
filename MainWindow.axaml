@@ -19,7 +19,11 @@
 			<Menu>
 				<MenuItem Header="Algorithm">
 					<ListBox x:Name="Alg" SelectionChanged="Alg_OnSelectionChanged"></ListBox>
-					<Button Content="Show Performance Chart" Click="OnChartClicked" DockPanel.Dock="Top"/>
+				</MenuItem>
+			</Menu>
+			<Menu>
+				<MenuItem Header="Performance Chart">
+					<ListBox x:Name="Chart" SelectionChanged="OnChartClicked"></ListBox>
 				</MenuItem>
 			</Menu>
 			<Button Content="Customize" Click="OnCustomization"/>

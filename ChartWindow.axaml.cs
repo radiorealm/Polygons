@@ -16,16 +16,24 @@ namespace Polygons;
 
 public partial class ChartWindow : Window
 {
+    private int chosen_chart;
+    
     public ChartWindow()
     {
         InitializeComponent();
         InvalidateVisual();
     }
 
+    public int Chart_
+    {
+        set { chosen_chart = value;} 
+    }
+    
     private void MyChartControl_OnLoaded(object? sender, RoutedEventArgs e)
     {
         var chartControl = this.Find<ChartControl>("chart");
-        chartControl.DrawPerformance();
+        chartControl.chosen_chart = chosen_chart;
+        chartControl.DrawChart();
     }
 
 }

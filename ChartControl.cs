@@ -20,46 +20,79 @@ public class ChartControl : UserControl
     private List<Point> points_def = [];
     private List<Point> points_and = [];
 
+    public int chosen_chart;
+    
+    private double scale_y;
+    private double scale_x;
+
+    private double _def;
+    private double _and;
+
+    private double width;
+    private double height;
+
     public override void Render(DrawingContext drawingContext)
     {
-        if (points_def.Count > 1 && points_and.Count > 1)
+        width = Bounds.Width - 25;
+        height = Bounds.Height - 25;
+        
+        if (points_and.Count > 1 && points_def.Count > 1)
         {
-            var maxShapes = points_def.Max(p => p.X);
-            var maxTime = points_def.Max(p => p.Y);
+            scale_x = width / points_def.Max(point => point.X);
+            switch (chosen_chart)
+            {
+                case 0:
+                    scale_y = height / points_def.Max(point => point.Y);
+                    for (int i = 0; i < points_def.Count - 1; i++)
+                    {
+                        drawingContext.DrawLine(new Pen(Brushes.PowderBlue),
+                            new Point(points_def[i].X * scale_x, height - (points_def[i].Y * scale_y)),
+                            new Point(points_def[i + 1].X * scale_x, height - (points_def[i + 1].Y * scale_y)));
+                    }
 
-            var width = Bounds.Width - 100;
-            var height = Bounds.Height - 100;
+                    break;
+                case 1:
+                    scale_y = height / points_and.Max(point => point.Y);
+                    for (int i = 0; i < points_and.Count - 1; i++)
+                    {
+                        drawingContext.DrawLine(new Pen(Brushes.Violet),
+                            new Point(points_and[i].X * scale_x, height - (points_and[i].Y * scale_y)),
+                            new Point(points_and[i + 1].X * scale_x, height - (points_and[i + 1].Y * scale_y)));
+                    }
 
-            var xScale = width / maxShapes;
-            var yScale = height / maxTime;
-            
-            var transformedPointsDef = points_def
-                .Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50))
-                .ToList();
-            var transformedPointsAnd = points_and
-                .Select(p => new Point(p.X * xScale + 50, height - (p.Y * yScale) + 50))
-                .ToList();
-            
-            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, 50), new Point(50, height + 50));
-            drawingContext.DrawLine(new Pen(Brushes.Black, 2), new Point(50, height + 50), new Point(width + 50, height + 50));
-            
-            drawingContext.DrawGeometry(new SolidColorBrush(Colors.HotPink), new Pen(Brushes.HotPink, 2), new PolylineGeometry(transformedPointsDef, false));
-            drawingContext.DrawGeometry(new SolidColorBrush(Colors.CornflowerBlue), new Pen(Brushes.CornflowerBlue, 2), new PolylineGeometry(transformedPointsAnd, false));
+                    break;
+                case 2:
+                    scale_y = height / points_def.Max(point => point.Y);
+                    for (int i = 0; i < points_def.Count - 1; i++)
+                    {
+                        drawingContext.DrawLine(new Pen(Brushes.PowderBlue),
+                            new Point(points_def[i].X * scale_x, height - (points_def[i].Y * scale_y)),
+                            new Point(points_def[i + 1].X * scale_x, height - (points_def[i + 1].Y * scale_y)));
+                        drawingContext.DrawLine(new Pen(Brushes.Violet),
+                            new Point(points_and[i].X * scale_x, height - (points_and[i].Y * scale_y)),
+                            new Point(points_and[i + 1].X * scale_x, height - (points_and[i + 1].Y * scale_y)));
+                    }
+                    break;
+            }
         }
     }
 
-    public void DrawPerformance()
+    public void DrawChart()
     {
-        for (var i = 1; i <= 100; i++)
+        shapes = GenerateRandomShapes(3);
+        var defTime = MeasureDefTime(UpdateConvexHull);
+        var andTime = MeasureDefTime(UpdateAndrew);
+        
+        for (int i = 3; i <= 500; i+=10)
         {
             shapes = GenerateRandomShapes(i);
-            var defTime = MeasureDefTime(UpdateConvexHull);
-            var andTime = MeasureDefTime(UpdateAndrew);
+            defTime = MeasureDefTime(UpdateConvexHull);
+            andTime = MeasureDefTime(UpdateAndrew);
 
-            points_def.Add(new Point(defTime, i));
-            points_and.Add(new Point(andTime, i));
+            points_def.Add(new Point(i, defTime));
+            points_and.Add(new Point(i, andTime));
         }
-
+        
         InvalidateVisual();
     }
 
@@ -170,5 +203,4 @@ public class ChartControl : UserControl
     {
         return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
     }
-
 }

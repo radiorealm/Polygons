@@ -26,6 +26,8 @@ namespace Polygons
 
             Alg.ItemsSource = new[] { "By definition", "Andrew" };
             Alg.SelectedIndex = 1;
+            
+            Chart.ItemsSource = new[] { "By definition", "Andrew", "Both" };
         }
 
         public void Win_PointerPressed(object sender, PointerPressedEventArgs e)
@@ -73,6 +75,7 @@ namespace Polygons
         public void OnChartClicked(object? sender, RoutedEventArgs e)
         {
             var window = new ChartWindow();
+            window.Chart_ = Chart.SelectedIndex;
             window.Show();
         }
 
