@@ -15,7 +15,8 @@ namespace Polygons
 {
     public class CustomControl : UserControl
     {
-        private List<Shape> shapes = [new Circle(100, 200), new Square(200, 200), new Triangle(300, 300)];
+        private List<Shape> shapes = new();
+        private List<Data> data = new();
 
         private int chosen_shape;
         private int chosen_alg;
@@ -25,6 +26,8 @@ namespace Polygons
         private bool IsHolding;
 
         private bool IsRChanged;
+        
+        public bool IsChanged = false;
         
         public bool RChanged{ set { IsRChanged = value; } }
 
@@ -88,7 +91,8 @@ namespace Polygons
                     prev_x = x; prev_y = y;
                 }
             }
-
+            
+            IsChanged = true;
             InvalidateVisual();
         }
 
@@ -99,10 +103,12 @@ namespace Polygons
             if (remove != null)
             {
                 shapes.Remove(remove);
+                IsChanged = true;
             }
             else if (IsPointInsideConvexHull(x, y))
             {
                 shapes.Clear();
+                IsChanged = true;
             }
 
             InvalidateVisual();
@@ -301,6 +307,7 @@ namespace Polygons
         public void UpdateRadius(object sender, RadEventArgs e)
         {
             Shape.R = e.r;
+            IsChanged = true;
             InvalidateVisual();
         }
         
@@ -308,6 +315,44 @@ namespace Polygons
         {
             Shape.Brush_C = e.brush_c;
             Shape.Pen_C = e.pen_c;
+            InvalidateVisual();
+        }
+        
+        //-----------------------------------------------
+
+        public List<Data> SaveShapes()
+        {
+            IsChanged = false;
+            foreach (var shape in shapes)
+            {
+                data.Add(new Data(shape.GetType().Name, shape.X, shape.Y, Shape.R));
+            }
+            return data;
+        }
+        
+        public async void LoadShapes(List<Data> _data)
+        {
+            IsChanged = true;
+            data.Clear();
+            shapes.Clear();
+            
+            foreach (Data d in _data)
+            {
+                Shape.R = _data[0].Radius;
+                switch (d.Type)
+                {
+                    case "Circle":
+                        shapes.Add(new Circle(d.X, d.Y));
+                        break;
+                    case "Square":
+                        shapes.Add(new Square(d.X, d.Y));
+                        break;
+                    case "Triangle":
+                        shapes.Add(new Triangle(d.X, d.Y));
+                        break;
+                }
+            }
+            
             InvalidateVisual();
         }
     }

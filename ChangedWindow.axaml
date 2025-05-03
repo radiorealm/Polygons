@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:Polygons="clr-namespace:Polygons"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="Polygons.ChangedWindow"
+        Title="ChangedWindow"
+        Height="200"
+        Width="300"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+    <StackPanel Margin="10" Spacing="10">
+        <TextBlock Text="You have unsaved changes. Do you want to save them?"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Save" Click="OnSaveClick"/>
+            <Button Content="Don't Save" Click="OnDontSaveClick"/>
+            <Button Content="Cancel" Click="OnCancelClick"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

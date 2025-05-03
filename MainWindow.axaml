@@ -12,6 +12,14 @@
 	<DockPanel>
 		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
 			<Menu>
+				<MenuItem Header="File">
+					<Button Click="OnNewClick">New</Button>
+					<Button Click="OnOpenClick">Open</Button>
+					<Button Click="OnSaveClick">Save</Button>
+					<Button Click="OnSaveAsClick">Save As...</Button>
+				</MenuItem>
+			</Menu>
+			<Menu>
 				<MenuItem Header="Shape">
 					<ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
 				</MenuItem>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Polygons
 {
-    internal abstract class Shape(double xx, double yy)
+    public abstract class Shape(double xx, double yy)
     {
         protected double x = xx, y = yy;
         protected static Color brush_c;
