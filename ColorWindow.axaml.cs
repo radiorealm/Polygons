@@ -16,30 +16,13 @@ using Avalonia.Interactivity;
 
 namespace Polygons;
 
-public partial class CustomWindow : Window
+public partial class ColorWindow : Window
 {
-    public CustomWindow()
+    public ColorWindow()
     {
         InitializeComponent();
     }
 
-    public event RadiusDelegate RadiusChanged;
-    
-    private void Slider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
-    {
-        if (this.RadiusChanged != null)
-        {
-            this.RadiusChanged(this, new RadEventArgs(Slider.Value));
-        }
-    }
-
-    public void SetRadius(double radius)
-    {
-        Slider.Value = radius;
-    }
-    
-    //-----------------------------------
-    
     private void ColorView_OnColorChanged(object? sender, ColorChangedEventArgs e)
     {
         if (this.ColorChanged != null)

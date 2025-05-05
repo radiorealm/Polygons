@@ -38,5 +38,9 @@
       <DependentUpon>ChangedDialogue.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="ColorWindow.axaml.cs">
+      <DependentUpon>ColorWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

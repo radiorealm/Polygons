@@ -24,12 +24,8 @@ namespace Polygons
         private double prev_x, prev_y;
 
         private bool IsHolding;
-
-        private bool IsRChanged;
         
-        public bool IsChanged = false;
-        
-        public bool RChanged{ set { IsRChanged = value; } }
+        public bool IsChanged { get; set; } = false;
 
         public override void Render(DrawingContext drawingContext)
         {
@@ -125,7 +121,7 @@ namespace Polygons
                 }
             }
             prev_x = x; prev_y = y;
-
+            
             InvalidateVisual();
         }
 
@@ -332,7 +328,6 @@ namespace Polygons
         
         public async void LoadShapes(List<Data> _data)
         {
-            IsChanged = true;
             data.Clear();
             shapes.Clear();
             

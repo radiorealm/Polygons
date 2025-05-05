@@ -7,12 +7,12 @@
         x:Class="Polygons.ChangedWindow"
         Title="ChangedWindow"
         Height="200"
-        Width="300"
+        Width="400"
         WindowStartupLocation="CenterOwner"
         CanResize="False">
-    <StackPanel Margin="10" Spacing="10">
-        <TextBlock Text="You have unsaved changes. Do you want to save them?"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+    <StackPanel>
+        <TextBlock Text="You have unsaved changes. Do you want to save them?" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
             <Button Content="Save" Click="OnSaveClick"/>
             <Button Content="Don't Save" Click="OnDontSaveClick"/>
             <Button Content="Cancel" Click="OnCancelClick"/>

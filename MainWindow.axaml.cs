@@ -15,13 +15,15 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using NP.Avalonia.Visuals.Behaviors;
 using Path = System.IO.Path;
 
 namespace Polygons
 {
     public partial class MainWindow : Window
     {
-        private CustomWindow? radWindow;
+        private RadiusWindow? radWindow;
+        private ColorWindow? colorWindow;
         
         private string filePath;
         
@@ -36,6 +38,8 @@ namespace Polygons
             Alg.SelectedIndex = 1;
             
             Chart.ItemsSource = new[] { "By definition", "Andrew", "Both" };
+            
+            Cust.ItemsSource = new[] { "Radius", "Colour" };
         }
 
         public void Win_PointerPressed(object sender, PointerPressedEventArgs e)
@@ -90,22 +94,38 @@ namespace Polygons
         private void OnCustomization(object? sender, RoutedEventArgs e)
         {
             var customControl = this.Find<CustomControl>("cc");
-            
-            if (radWindow == null)
-            {
-                radWindow = new CustomWindow();
-                radWindow.SetRadius(Shape.R);
-                radWindow.RadiusChanged += customControl!.UpdateRadius;
-                
-                radWindow.SetColor(Shape.Brush_C, Shape.Pen_C);
-                radWindow.ColorChanged += customControl!.UpdateColor;
+            var type = Cust.SelectedIndex;
 
-                radWindow.Closed += (s, args) => radWindow = null;
-                radWindow.Show();
+            if (type == 0)
+            {
+                if (radWindow == null)
+                {
+                    radWindow = new RadiusWindow();
+                    radWindow.SetRadius(Shape.R);
+                    radWindow.RadiusChanged += customControl!.UpdateRadius;
+
+                    radWindow.Closed += (s, args) => radWindow = null;
+                    radWindow.Show();
+                }
+                else
+                {
+                    radWindow.Activate();
+                    radWindow.WindowState = WindowState.Normal;
+                }
             }
+
             else
             {
-                radWindow.Activate();
+                if (colorWindow == null)
+                {
+                    colorWindow = new ColorWindow();
+                    colorWindow.Show();
+                }
+                else
+                {
+                    colorWindow.Activate();
+                    colorWindow.WindowState = WindowState.Normal;
+                }
             }
         }
         
@@ -116,10 +136,15 @@ namespace Polygons
             Console.WriteLine("New");
             var custom = this.Find<CustomControl>("cc");
             
-            if (!custom.IsChanged || await ConfirmChanges())
+            if (await ConfirmChanges())
             {
                 custom.LoadShapes(new List<Data>());
+                custom.IsChanged = false;
                 filePath = null;
+                radWindow?.Close();
+                Shape.R = 20;
+                Shape.Brush_C = Colors.CornflowerBlue;
+                Shape.Pen_C = Colors.LavenderBlush;
             }
         }
 
@@ -127,10 +152,11 @@ namespace Polygons
         {
             Console.WriteLine("Open");
             var custom = this.Find<CustomControl>("cc");
-
-            if (!custom.IsChanged || await ConfirmChanges())
+            
+            Console.WriteLine(custom.IsChanged ? "Changed" : "Not Changed");
+            
+            if (await ConfirmChanges())
             {
-
                 var dialog = new OpenFileDialog
                 {
                     AllowMultiple = false
@@ -141,27 +167,21 @@ namespace Polygons
                 if (result != null && result.Length > 0)
                 {
                     filePath = result[0];
+                    Console.WriteLine("File: " + filePath);
                     var json = await File.ReadAllTextAsync(filePath);
                     custom.LoadShapes(JsonSerializer.Deserialize<List<Data>>(json));
+                    custom.IsChanged = false;
+                    radWindow?.Close();
+                    Shape.R = 20;
+                    Shape.Brush_C = Colors.CornflowerBlue;
+                    Shape.Pen_C = Colors.LavenderBlush;
                 }
             }
         }
 
         private async void OnSaveClick(object? sender, RoutedEventArgs routedEventArgs)
         {
-            Console.WriteLine("Save");
-            if (filePath != null)
-            {
-                var custom = this.Find<CustomControl>("cc");
-                var shapes = custom.SaveShapes();
-                var json = JsonSerializer.Serialize(shapes, new JsonSerializerOptions { WriteIndented = true });
-                await File.WriteAllTextAsync(filePath, json);
-            }
-
-            else
-            {
-                OnSaveAsClick(null, null);
-            }
+            Save(sender, routedEventArgs);
         }
 
         private async void OnSaveAsClick(object? sender, RoutedEventArgs routedEventArgs)
@@ -184,6 +204,7 @@ namespace Polygons
         private async Task<bool> ConfirmChanges() //true = открыть (новый) файл, false = отмена операции
         {
             var custom = this.Find<CustomControl>("cc");
+            
             if (custom.IsChanged)
             {
                 var window = new ChangedWindow();
@@ -193,7 +214,7 @@ namespace Polygons
                 switch (result)
                 {
                     case "Save":
-                        OnSaveClick(null, null);
+                        await Save(null, null);
                         return true;
                     case "DontSave":
                         return true;
@@ -202,6 +223,23 @@ namespace Polygons
                 }
             }
             return true;
+        }
+
+        private async Task Save(object? sender, RoutedEventArgs routedEventArgs)
+        {
+            Console.WriteLine("Save");
+            if (filePath != null)
+            {
+                var custom = this.Find<CustomControl>("cc");
+                var shapes = custom.SaveShapes();
+                var json = JsonSerializer.Serialize(shapes, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(filePath, json);
+            }
+
+            else
+            {
+                OnSaveAsClick(null, null);
+            }
         }
     }
 }

@@ -34,7 +34,11 @@
 					<ListBox x:Name="Chart" SelectionChanged="OnChartClicked"></ListBox>
 				</MenuItem>
 			</Menu>
-			<Button Content="Customize" Click="OnCustomization"/>
+			<Menu>
+				<MenuItem Header="Customization">
+					<ListBox x:Name="Cust" SelectionChanged="OnCustomization"></ListBox>
+				</MenuItem>
+			</Menu>
 		</StackPanel>
 		<Polygons:CustomControl Name="cc"/>
 	</DockPanel>
