@@ -12,7 +12,7 @@ Delete convex hull with RMB (cursor must be inside the hull)
 Convex hull DnD
 
 Menus:
-1. Save/load (TODO)
+1. Save/load
    Allows to save (as)/create new/open a file (similar to save/load in Paint)
 2. Shape
    Allows to change the shape of next vertices
@@ -22,3 +22,6 @@ Menus:
    Plots the dependence of the time spent to calculate a convex hull on the number of vertices in a modal window
 5. Customize
    Opens a non-modal window that allows to change radius/colour/pen colour of all vertices
+
+Trembling (play/stop buttons) TODO
+   Allows to make shapes themble slightly
